@@ -71,3 +71,11 @@ body {
     text-align: center;
     margin-top: 150px;
 }
+
+.invalid > input {
+    background-color: #fbe3e4;
+}
+
+.invalid > label {
+    background: linear-gradient(to top, #fbe3e4 40%, #f2f5fc 50%, transparent);
+}

@@ -22,6 +22,7 @@ export default function Login() {
         // }),
         onSubmit: values => {
             shema.isValid(values).then((valid) => console.log(valid));
+            
             //alert(JSON.stringify(values, null, 2));
         }
     });
