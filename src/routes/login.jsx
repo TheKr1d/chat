@@ -1,16 +1,20 @@
 import "../css/login.css";
 import { useFormik } from 'formik';
+import { useState } from "react";
+import cn from 'classnames';
 import * as yup from 'yup';
 
 export default function Login() {
+    const [isErrors, setIsErrors] = useState(false);
+
     const initialValues = {
         login: '',
         password: ''
     };
-    const shema = yup.object().shape({
-        login: yup.string().max(15, 'Must be 15 characters or less'),
-        password: yup.string().required('No password provided.')
-            .min(4, 'Password is too short - should be 8 chars minimum.')
+    const schema = yup.object().shape({
+        login: yup.string().max(15, 'Максимум 15 символов.'),
+        password: yup.string().required('Пароль не введен')
+            .min(4, 'Пароль слишком короткий - должен состоять минимум из 4 символов')
     })
     const formik = useFormik({
         initialValues,
@@ -21,9 +25,15 @@ export default function Login() {
         //         .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
         // }),
         onSubmit: values => {
-            shema.isValid(values).then((valid) => console.log(valid));
-            
-            //alert(JSON.stringify(values, null, 2));
+            schema.validate(values)
+                .then((logAndPass) => {
+                    setIsErrors(false);
+                    console.log(logAndPass)
+                })
+                .catch(() => {
+                    setIsErrors(true);
+                })
+
         }
     });
 
@@ -31,7 +41,7 @@ export default function Login() {
         <div className="container">
             <form onSubmit={formik.handleSubmit} className="form">
                 <h1 className="form_title">Вход</h1>
-                <div className="form_input m_top_100">
+                <div className={cn('form_input m_top_100', isErrors ? 'invalid' : null)}>
                     <label htmlFor="login" className="input_lebel">Login</label>
                     <input
                         id="login"
@@ -43,7 +53,7 @@ export default function Login() {
                         placeholder="Lion"
                     />
                 </div>
-                <div className="form_input">
+                <div className={cn('form_input', isErrors ? 'invalid' : null)}>
                     <label htmlFor="login" className="input_lebel">Password</label>
                     <input
                         id="password"
@@ -54,6 +64,7 @@ export default function Login() {
                         className="input_item"
                         placeholder="******"
                     />
+                    {isErrors ? <div className="feedback">Неверный логин или пароль.</div> : null}
                 </div>
                 <div className="submit_item">
                     <button type="submit" className="submit">Submit</button>
