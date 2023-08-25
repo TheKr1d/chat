@@ -1,10 +1,18 @@
 import "../css/login.css";
 import { useFormik } from 'formik';
+import axios from "axios";
 import { useState } from "react";
 import cn from 'classnames';
 import * as yup from 'yup';
 
 export default function Login() {
+    axios.post('/api/v1/login', { username: 'admin', password: 'admin' })
+    .then((response) => {
+        console.log(response.data);
+      })
+    .catch((err) => {
+        return;
+    })
     const [isErrors, setIsErrors] = useState(false);
 
     const initialValues = {
@@ -18,17 +26,10 @@ export default function Login() {
     })
     const formik = useFormik({
         initialValues,
-        // validationSchema: Yup.object({
-        //     login: Yup.string().max(2, 'Must be 15 characters or less'),
-        //     password: Yup.string().required('No password provided.')
-        //         .min(8, 'Password is too short - should be 8 chars minimum.')
-        //         .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
-        // }),
         onSubmit: values => {
             schema.validate(values)
                 .then((logAndPass) => {
                     setIsErrors(false);
-                    console.log(logAndPass)
                 })
                 .catch(() => {
                     setIsErrors(true);
