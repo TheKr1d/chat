@@ -1,22 +1,26 @@
 import "../css/login.css";
 import { useFormik } from 'formik';
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import cn from 'classnames';
 import * as yup from 'yup';
+import ThemeContext from "../context/themeContext";
+import { setItem_LS, clear_LS } from "../utils/localStorage";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-    axios.post('/api/v1/login', { username: 'admin', password: 'admin' })
-    .then((response) => {
-        console.log(response.data);
-      })
-    .catch((err) => {
-        return;
-    })
+    const {logIn} = useContext(ThemeContext);
+
+    clear_LS();
+
+
+
+    const navigate = useNavigate();
     const [isErrors, setIsErrors] = useState(false);
+    
 
     const initialValues = {
-        login: '',
+        username: '',
         password: ''
     };
     const schema = yup.object().shape({
@@ -27,9 +31,19 @@ export default function Login() {
     const formik = useFormik({
         initialValues,
         onSubmit: values => {
-            schema.validate(values)
-                .then((logAndPass) => {
+            schema
+                .validate(values)
+                .then((v) => {
                     setIsErrors(false);
+                    axios.post('/api/v1/login', v)
+                        .then((response) => {
+                            setItem_LS(JSON.stringify(response.data));
+                            logIn();
+                            navigate('/');
+                        })
+                        .catch((err) => {
+                            return;
+                        })
                 })
                 .catch(() => {
                     setIsErrors(true);
@@ -43,19 +57,19 @@ export default function Login() {
             <form onSubmit={formik.handleSubmit} className="form">
                 <h1 className="form_title">Вход</h1>
                 <div className={cn('form_input m_top_100', isErrors ? 'invalid' : null)}>
-                    <label htmlFor="login" className="input_lebel">Login</label>
+                    <label htmlFor="username" className="input_lebel">Login</label>
                     <input
-                        id="login"
-                        name="login"
+                        id="username"
+                        name="username"
                         type="text"
                         onChange={formik.handleChange}
-                        value={formik.values.login}
+                        value={formik.values.username}
                         className="input_item"
                         placeholder="Lion"
                     />
                 </div>
                 <div className={cn('form_input', isErrors ? 'invalid' : null)}>
-                    <label htmlFor="login" className="input_lebel">Password</label>
+                    <label htmlFor="password" className="input_lebel">Password</label>
                     <input
                         id="password"
                         name="password"

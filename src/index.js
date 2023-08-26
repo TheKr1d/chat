@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import Root from './routes/root';
 import ErrorPage from './routes/error-page';
 import Login from './routes/login';
-import reportWebVitals from './reportWebVitals';
+import { isItem_LS } from './utils/localStorage';
+import ThemeContext from './context/themeContext';
 import {
   createBrowserRouter,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 
+function PrivatRoute({ children }) {
+  const { isLogin } = useContext(ThemeContext);
 
+  return isLogin ? children : <Navigate to="/login" />;
+}
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: (<PrivatRoute>
+      <Root />
+    </PrivatRoute>),
     errorElement: <ErrorPage />
   },
   {
@@ -23,12 +31,25 @@ const router = createBrowserRouter([
 
 ])
 
+function App() {
+  const [isLogin, setIsLogin] = useState(isItem_LS());
+
+  const logIn = () => setIsLogin(true);
+  const logOut = () => setIsLogin(false);
+
+  return (
+    <React.StrictMode>
+      <ThemeContext.Provider value={{ isLogin, logIn, logOut }}>
+        <RouterProvider router={router} />
+      </ThemeContext.Provider>
+    </React.StrictMode>
+  )
+}
+
+
+
+
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>
-);
-
-
-reportWebVitals();
+root.render(<App />);
