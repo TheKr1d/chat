@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import Root from './routes/root';
 import ErrorPage from './routes/error-page';
 import Login from './routes/login';
 import { isItem_LS } from './utils/localStorage';
 import ThemeContext from './context/themeContext';
+import "../src/css/index.css";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -19,7 +20,8 @@ function PrivatRoute({ children }) {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (<PrivatRoute>
+    element: 
+    (<PrivatRoute>
       <Root />
     </PrivatRoute>),
     errorElement: <ErrorPage />

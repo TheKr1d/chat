@@ -1,4 +1,3 @@
-import "../css/login.css";
 import { useFormik } from 'formik';
 import axios from "axios";
 import { useState, useContext } from "react";
@@ -82,7 +81,7 @@ export default function Login() {
                     {isErrors ? <div className="feedback">Неверный логин или пароль.</div> : null}
                 </div>
                 <div className="submit_item">
-                    <button type="submit" className="submit">Submit</button>
+                    <button type="submit" className="submit_login">Submit</button>
                 </div>
 
             </form>
