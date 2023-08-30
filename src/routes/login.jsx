@@ -53,7 +53,7 @@ export default function Login() {
 
     return (
         <div className="container">
-            <form onSubmit={formik.handleSubmit} className="form">
+            <form onSubmit={formik.handleSubmit} className="form_login">
                 <h1 className="form_title">Вход</h1>
                 <div className={cn('form_input m_top_100', isErrors ? 'invalid' : null)}>
                     <label htmlFor="username" className="input_lebel">Login</label>
@@ -65,6 +65,7 @@ export default function Login() {
                         value={formik.values.username}
                         className="input_item"
                         placeholder="Lion"
+                        autoComplete='off'
                     />
                 </div>
                 <div className={cn('form_input', isErrors ? 'invalid' : null)}>
@@ -77,6 +78,7 @@ export default function Login() {
                         value={formik.values.password}
                         className="input_item"
                         placeholder="******"
+                        autoComplete='off'
                     />
                     {isErrors ? <div className="feedback">Неверный логин или пароль.</div> : null}
                 </div>
