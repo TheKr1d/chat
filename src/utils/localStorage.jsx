@@ -21,4 +21,8 @@ const getUsername_LS = () => {
     return _.startCase(_.toLower(username));
 }
 
-export { setItem_LS, getItem_LS, clear_LS, isItem_LS, getUsername_LS };
+const getToken_LS = () => {
+    const { token } = JSON.parse(localStorage.getItem('user'));
+    return token;
+}
+export { setItem_LS, getItem_LS, clear_LS, isItem_LS, getUsername_LS, getToken_LS };

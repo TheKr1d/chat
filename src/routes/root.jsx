@@ -1,33 +1,37 @@
 import { useNavigate } from "react-router-dom";
 import { useFormik } from 'formik';
-import cn from 'classnames';
+
+import { useDispatch } from "react-redux";
+import { addChanels } from "../store/chanelsSlice";
 import _ from "lodash";
-import { getUsername_LS } from "../utils/localStorage";
-import { useState } from "react";
+import { getUsername_LS, getToken_LS } from "../utils/localStorage";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Messages from '../components/messages';
+import Channels from "../components/cannels";
 
 export default function Root() {
-    const testGroup = [{
-        name: "General",
-        id: _.uniqueId(),
-        state: "active"
-    },
-    {
-        name: "Random",
-        id: _.uniqueId(),
-        state: null
-    }];
-    const [message, setMessage] = useState([]);
+    const dispatch = useDispatch();
 
+    useEffect(() => {
+        axios.get('/api/v1/data', {
+            headers: {
+              Authorization: `Bearer ${getToken_LS()}`,
+            },
+          })
+          .then((response) => {
+            const {channels} = response.data;
+            const newChannels = channels.map((item) => item.name === 'general' ? {...item, state: 'active'} : {...item, state: null})
+            dispatch(addChanels(newChannels));
+            //console.log(response.data); // => { channels: [...], currentChannelId: 1, messages: [] }
+          })
+    }, [dispatch])
+
+    const [message, setMessage] = useState([]);
     const addMessage = (data) => {
         setMessage([...message, data]);
     };
 
-    const [group, setGroup] = useState(testGroup);
-
-    const setStateGroup = (id) => { 
-        const newGroup = group.map((item) => item.id === id ? {...item, state: 'active'} : {...item, state: null});
-        setGroup(newGroup);
-    }
 
     const navigate = useNavigate();
     const initialValues = { text: '' };
@@ -53,22 +57,24 @@ export default function Root() {
             <div className='container_chat'>
                 <div className="chanels_grup">
                     <div className="chanel_title">Каналы</div>
-                    {group.map(({ name, id, state }) =>
+                    {<Channels />
+                    
+                    
+                    
+                    /* {channels.map(({ name, id, state }, key) =>
                         <div
-                            key={id}
+                            key={key}
                             id={id}
                             className={cn("chanel_item", state)}
                             onClick={() => setStateGroup(id)}
                         >
                             # {name}
-                        </div>)}
+                        </div>)} */}
                 </div>
                 <div className="chat_name">
                     <div className="chat_title">Название чата</div>
                     <div>
-                        {message.map(({ username, text, id }) => {
-                            return <div key={id}><b>{username}</b>: {text}</div>;
-                        })}
+                        {<Messages message={message}/>}
                     </div>
                     <div>
                         <form className="chat_form" type="submit" onSubmit={formik.handleSubmit}>

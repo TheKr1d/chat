@@ -1,16 +1,19 @@
 import React, { useContext, useState } from 'react';
+import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom/client';
 import Root from './routes/root';
 import ErrorPage from './routes/error-page';
 import Login from './routes/login';
 import { isItem_LS } from './utils/localStorage';
 import ThemeContext from './context/themeContext';
+import store from './store/index';
 import "../src/css/index.css";
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
+
 
 function PrivatRoute({ children }) {
   const { isLogin } = useContext(ThemeContext);
@@ -20,10 +23,12 @@ function PrivatRoute({ children }) {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: 
-    (<PrivatRoute>
-      <Root />
-    </PrivatRoute>),
+    element:
+      (<PrivatRoute>
+        <Provider store={store}>
+          <Root />
+        </Provider>
+      </PrivatRoute>),
     errorElement: <ErrorPage />
   },
   {
