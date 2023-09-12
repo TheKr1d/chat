@@ -36,7 +36,7 @@ export default function Login() {
                     setIsErrors(false);
                     axios.post('/api/v1/login', v)
                         .then((response) => {
-                            setItem_LS(JSON.stringify(response.data));
+                            setItem_LS(response.data);
                             logIn();
                             navigate('/');
                         })
