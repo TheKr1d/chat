@@ -6,6 +6,7 @@ import axios from "axios";
 import { addChanels } from "../store/chanelsSlice";
 import { addMessage } from "../store/messagesSlice";
 import { getToken_LS } from "../utils/localStorage";
+import { responceSocket } from "../store/asyncRequests";
 import Messages from '../components/messages';
 import Channels from "../components/cannels";
 import MessageForm from "../components/chatForm";
@@ -18,16 +19,7 @@ export default function Root() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get('/api/v1/data', {
-            headers: {
-                Authorization: `Bearer ${getToken_LS()}`,
-            },
-        })
-            .then((response) => {
-                const { channels, currentChannelId } = response.data;
-                dispatch(addChanels({ channels, currentChannelId }));
-                //console.log(response.data); // => { channels: [...], currentChannelId: 1, messages: [] }
-            })
+        dispatch(responceSocket());
     }, [dispatch])
 
 
