@@ -20,15 +20,17 @@ function PrivatRoute({ children }) {
 
   return isLogin ? children : <Navigate to="/login" />;
 }
+
+
 const router = createBrowserRouter([
   {
     path: "/",
     element:
-      (<PrivatRoute>
-        <Provider store={store}>
+      (<Provider store={store}>
+        <PrivatRoute>
           <Root />
-        </Provider>
-      </PrivatRoute>),
+        </PrivatRoute>
+      </Provider>),
     errorElement: <ErrorPage />
   },
   {
@@ -45,11 +47,9 @@ function App() {
   const logOut = () => setIsLogin(false);
 
   return (
-    <React.StrictMode>
       <ThemeContext.Provider value={{ isLogin, logIn, logOut }}>
         <RouterProvider router={router} />
       </ThemeContext.Provider>
-    </React.StrictMode>
   )
 }
 

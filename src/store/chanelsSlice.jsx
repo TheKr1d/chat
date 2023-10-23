@@ -38,7 +38,7 @@ const chanelsSlice = createSlice({
             const { channels, currentChannelId } = action.payload;
             const modificationChannels = channels.map((item) => item.id === currentChannelId ? { ...item, state: 'active' } : { ...item, state: null });
             const currentChannel = channels.filter((item) => item.id === currentChannelId)[0];
-
+        
             state.chanels = modificationChannels;
             state.currentChannel.id = currentChannel.id;
             state.currentChannel.name = currentChannel.name;
